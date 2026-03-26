@@ -1,0 +1,11 @@
+[package]
+name = "FundFlow"
+version = "0.0.1"
+edition = "2024.beta"
+
+[addresses]
+fundflow = "0x0"
+one = "0x2"
+
+[dependencies]
+One = { git = "https://github.com/one-chain-labs/onechain.git", subdir = "crates/sui-framework/packages/one-framework", rev = "framework/testnet" }
