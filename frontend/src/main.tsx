@@ -7,7 +7,6 @@ import App from './App';
 import './index.css';
 
 const queryClient = new QueryClient();
-
 const networks = {
   testnet: { url: import.meta.env.VITE_RPC_URL || 'https://rpc-testnet.onelabs.cc:443' },
 };
