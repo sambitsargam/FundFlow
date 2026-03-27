@@ -287,12 +287,8 @@ function Dashboard() {
                 {myCampaigns.map((e: any, i: number) => (
                   <motion.div key={i} whileHover={{ scale: 1.02 }} className="glass rounded-2xl p-6">
                     <h3 className="text-lg font-bold mb-2">{e.parsedJson?.title}</h3>
-                    <p className="text-sm text-gray-400 mb-3">Goal: {(e.parsedJson?.goal_amount / 1e9 || 0).toFixed(2)} OTC</p>
-                    <p className="text-xs text-gray-500 font-mono break-all mb-2">{e.parsedJson?.campaign_id}</p>
-                    <div className="w-full bg-white/10 rounded-full h-2 mb-1">
-                      <div className="bg-gradient-to-r from-emerald-500 to-blue-500 h-2 rounded-full" style={{ width: '45%' }} />
-                    </div>
-                    <p className="text-xs text-gray-500">45% funded</p>
+                    <p className="text-sm text-gray-400 mb-2">Goal: {(e.parsedJson?.goal_amount / 1e9 || 0).toFixed(2)} OTC</p>
+                    <p className="text-xs text-gray-500 font-mono break-all">Campaign ID: {e.parsedJson?.campaign_id}</p>
                   </motion.div>
                 ))}
               </div>

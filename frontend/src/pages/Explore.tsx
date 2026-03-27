@@ -59,17 +59,8 @@ function Explore() {
               >
                 <div className="text-3xl mb-3">🎯</div>
                 <h3 className="text-lg font-bold mb-2">{e.parsedJson?.title || 'Campaign'}</h3>
-                <p className="text-xs text-gray-400 mb-4 font-mono">{e.parsedJson?.owner?.slice(0, 16)}...</p>
-                <div className="mb-3">
-                  <div className="flex justify-between text-xs text-gray-400 mb-1">
-                    <span>Progress</span>
-                    <span>Goal: {(e.parsedJson?.goal_amount / 1e9 || 0).toFixed(1)} OTC</span>
-                  </div>
-                  <div className="w-full bg-white/10 rounded-full h-2 mb-2">
-                    <div className="bg-gradient-to-r from-emerald-500 to-blue-500 h-2 rounded-full" style={{ width: '0%' }} />
-                  </div>
-                  <p className="text-xs text-gray-500 font-mono break-all mb-3">{e.parsedJson?.owner}</p>
-                </div>
+                <p className="text-sm text-gray-400 mb-2">Goal: {(e.parsedJson?.goal_amount / 1e9 || 0).toFixed(1)} OTC</p>
+                <p className="text-xs text-gray-500 font-mono break-all mb-4">{e.parsedJson?.owner}</p>
                 <button
                   onClick={() => navigate('/app')}
                   className="w-full py-2 bg-gradient-to-r from-emerald-500/20 to-blue-500/20 border border-emerald-500/30 rounded-lg text-sm font-medium hover:from-emerald-500/30 hover:to-blue-500/30 transition-all"
