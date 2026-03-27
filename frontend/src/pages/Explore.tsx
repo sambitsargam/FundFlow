@@ -63,12 +63,12 @@ function Explore() {
   const { data: campaignEvents, isLoading: loadingCampaigns } = useSuiClientQuery('queryEvents', {
     query: { MoveEventType: `${PACKAGE_ID}::donation_tracker::CampaignCreated` },
     limit: 50,
-  });
+  }, { refetchInterval: 3000 });
 
   const { data: donationEvents, isLoading: loadingDonations } = useSuiClientQuery('queryEvents', {
     query: { MoveEventType: `${PACKAGE_ID}::donation_tracker::DonationMade` },
     limit: 200,
-  });
+  }, { refetchInterval: 3000 });
 
   const campaigns = campaignEvents?.data || [];
   const donations = donationEvents?.data || [];

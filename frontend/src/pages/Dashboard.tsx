@@ -21,16 +21,15 @@ function Dashboard() {
   const [selectedCampaign, setSelectedCampaign] = useState<any>(null);
 
   // Fetch ALL campaigns for donate tab
-  const { data: allCampaignEvents, isLoading: campaignsLoading } = useSuiClientQuery('queryEvents', {
+  const { data: allCampaignEvents, isLoading: campaignsLoading, refetch: refetchCampaigns } = useSuiClientQuery('queryEvents', {
     query: { MoveEventType: `${PACKAGE_ID}::donation_tracker::CampaignCreated` },
     limit: 50,
-  });
+  }, { refetchInterval: 3000 });
 
-  // Fetch all donation events to compute real raised amounts
-  const { data: donationEvents } = useSuiClientQuery('queryEvents', {
+  const { data: donationEvents, refetch: refetchDonations } = useSuiClientQuery('queryEvents', {
     query: { MoveEventType: `${PACKAGE_ID}::donation_tracker::DonationMade` },
     limit: 200,
-  });
+  }, { refetchInterval: 3000 });
 
   const allCampaigns = allCampaignEvents?.data || [];
   const allDonations = donationEvents?.data || [];
@@ -105,6 +104,7 @@ function Dashboard() {
           setCampaignData({ title: '', description: '', goalAmount: '' });
           setAiScore(null);
           setAiAnalysis('');
+          refetchCampaigns();
         },
         onError: () => setMessage('❌ Error creating campaign'),
       });
@@ -137,6 +137,8 @@ function Dashboard() {
           setMessage('✅ Donation successful! Thank you!');
           setDonateData({ campaignId: '', amount: '', donateMessage: '' });
           setSelectedCampaign(null);
+          refetchDonations();
+          refetchCampaigns();
         },
         onError: () => setMessage('❌ Donation failed'),
       });
