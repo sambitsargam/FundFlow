@@ -63,11 +63,12 @@ function Explore() {
                 <div className="mb-3">
                   <div className="flex justify-between text-xs text-gray-400 mb-1">
                     <span>Progress</span>
-                    <span>Goal: {(e.parsedJson?.goal_amount / 1e9 || 0).toFixed(1)} ONE</span>
+                    <span>Goal: {(e.parsedJson?.goal_amount / 1e9 || 0).toFixed(1)} OTC</span>
                   </div>
-                  <div className="w-full bg-white/10 rounded-full h-2">
-                    <div className="bg-gradient-to-r from-emerald-500 to-blue-500 h-2 rounded-full" style={{ width: `${Math.random() * 80 + 10}%` }} />
+                  <div className="w-full bg-white/10 rounded-full h-2 mb-2">
+                    <div className="bg-gradient-to-r from-emerald-500 to-blue-500 h-2 rounded-full" style={{ width: '0%' }} />
                   </div>
+                  <p className="text-xs text-gray-500 font-mono break-all mb-3">{e.parsedJson?.owner}</p>
                 </div>
                 <button
                   onClick={() => navigate('/app')}

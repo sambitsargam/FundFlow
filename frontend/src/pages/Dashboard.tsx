@@ -50,7 +50,7 @@ function Dashboard() {
           model: 'gpt-4',
           messages: [{
             role: 'user',
-            content: `You are a crowdfunding fraud detection AI. Analyze this campaign for genuineness and legitimacy. Return ONLY a JSON object with two fields: "score" (integer 0-100, where 100 is completely genuine) and "reason" (one sentence explanation). Campaign Title: "${campaignData.title}", Description: "${campaignData.description}", Goal Amount: ${campaignData.goalAmount} ONE tokens.`,
+            content: `You are a crowdfunding fraud detection AI. Analyze this campaign for genuineness and legitimacy. Return ONLY a JSON object with two fields: "score" (integer 0-100, where 100 is completely genuine) and "reason" (one sentence explanation). Campaign Title: "${campaignData.title}", Description: "${campaignData.description}", Goal Amount: ${campaignData.goalAmount} OTC tokens.`,
           }],
           max_tokens: 150,
         }),
@@ -232,7 +232,7 @@ function Dashboard() {
               />
               <input
                 className="bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-white placeholder-gray-500 focus:outline-none focus:border-emerald-500 transition-colors"
-                placeholder="Goal Amount (ONE) *"
+                placeholder="Goal Amount (OTC) *"
                 type="number"
                 value={campaignData.goalAmount}
                 onChange={(e) => { setCampaignData({ ...campaignData, goalAmount: e.target.value }); setAiScore(null); }}
@@ -287,7 +287,8 @@ function Dashboard() {
                 {myCampaigns.map((e: any, i: number) => (
                   <motion.div key={i} whileHover={{ scale: 1.02 }} className="glass rounded-2xl p-6">
                     <h3 className="text-lg font-bold mb-2">{e.parsedJson?.title}</h3>
-                    <p className="text-sm text-gray-400 mb-3">Goal: {(e.parsedJson?.goal_amount / 1e9 || 0).toFixed(2)} ONE</p>
+                    <p className="text-sm text-gray-400 mb-3">Goal: {(e.parsedJson?.goal_amount / 1e9 || 0).toFixed(2)} OTC</p>
+                    <p className="text-xs text-gray-500 font-mono break-all mb-2">{e.parsedJson?.campaign_id}</p>
                     <div className="w-full bg-white/10 rounded-full h-2 mb-1">
                       <div className="bg-gradient-to-r from-emerald-500 to-blue-500 h-2 rounded-full" style={{ width: '45%' }} />
                     </div>
@@ -327,8 +328,8 @@ function Dashboard() {
                           <h4 className="font-semibold text-sm">{e.parsedJson?.title || 'Untitled Campaign'}</h4>
                           {isSelected && <span className="text-emerald-400 text-xs font-bold">✓ Selected</span>}
                         </div>
-                        <p className="text-xs text-gray-400 mb-2">Goal: {(e.parsedJson?.goal_amount / 1e9 || 0).toFixed(1)} ONE</p>
-                        <p className="text-xs text-gray-500 font-mono truncate">{e.parsedJson?.owner?.slice(0, 20)}...</p>
+                        <p className="text-xs text-gray-400 mb-2">Goal: {(e.parsedJson?.goal_amount / 1e9 || 0).toFixed(1)} OTC</p>
+                        <p className="text-xs text-gray-500 font-mono break-all">{e.parsedJson?.owner}</p>
                       </motion.div>
                     );
                   })}
@@ -347,7 +348,7 @@ function Dashboard() {
               <div className="flex flex-col gap-4">
                 <input
                   className="bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-white placeholder-gray-500 focus:outline-none focus:border-emerald-500 transition-colors"
-                  placeholder="Amount (ONE) *"
+                placeholder="Amount (OTC) *"
                   type="number"
                   value={donateData.amount}
                   onChange={(e) => setDonateData({ ...donateData, amount: e.target.value })}
