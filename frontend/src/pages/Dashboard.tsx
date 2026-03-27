@@ -26,8 +26,23 @@ function Dashboard() {
     limit: 50,
   });
 
+  // Fetch all donation events to compute real raised amounts
+  const { data: donationEvents } = useSuiClientQuery('queryEvents', {
+    query: { MoveEventType: `${PACKAGE_ID}::donation_tracker::DonationMade` },
+    limit: 200,
+  });
+
   const allCampaigns = allCampaignEvents?.data || [];
+  const allDonations = donationEvents?.data || [];
   const myCampaigns = allCampaigns.filter((e: any) => e.parsedJson?.owner === account?.address);
+
+  // Helper: compute raised OTC for a campaign
+  const getRaised = (campaignId: string) => {
+    const raw = allDonations
+      .filter((d: any) => d.parsedJson?.campaign_id === campaignId)
+      .reduce((sum: number, d: any) => sum + (parseInt(d.parsedJson?.amount) || 0), 0);
+    return raw / 1e9;
+  };
 
   // AI genuineness check — returns score 0-100
   const checkWithAI = async () => {
@@ -286,9 +301,25 @@ function Dashboard() {
               <div className="grid md:grid-cols-2 gap-5">
                 {myCampaigns.map((e: any, i: number) => (
                   <motion.div key={i} whileHover={{ scale: 1.02 }} className="glass rounded-2xl p-6">
-                    <h3 className="text-lg font-bold mb-2">{e.parsedJson?.title}</h3>
-                    <p className="text-sm text-gray-400 mb-2">Goal: {(e.parsedJson?.goal_amount / 1e9 || 0).toFixed(2)} OTC</p>
-                    <p className="text-xs text-gray-500 font-mono break-all">Campaign ID: {e.parsedJson?.campaign_id}</p>
+                    <h3 className="text-lg font-bold mb-1">{e.parsedJson?.title}</h3>
+                    <p className="text-xs text-gray-500 font-mono break-all mb-3">{e.parsedJson?.campaign_id}</p>
+                    {(() => {
+                      const goal = (e.parsedJson?.goal_amount || 0) / 1e9;
+                      const raised = getRaised(e.parsedJson?.campaign_id);
+                      const pct = goal > 0 ? Math.min(100, Math.round((raised / goal) * 100)) : 0;
+                      return (
+                        <>
+                          <div className="flex justify-between text-xs mb-1">
+                            <span className="text-emerald-400 font-semibold">{raised.toFixed(2)} OTC raised</span>
+                            <span className="text-gray-400">Goal: {goal.toFixed(2)} OTC</span>
+                          </div>
+                          <div className="w-full bg-white/10 rounded-full h-2">
+                            <div className="bg-gradient-to-r from-emerald-500 to-blue-500 h-2 rounded-full" style={{ width: `${pct}%` }} />
+                          </div>
+                          <p className="text-xs text-gray-400 mt-1">{pct}% funded</p>
+                        </>
+                      );
+                    })()}
                   </motion.div>
                 ))}
               </div>
@@ -324,8 +355,24 @@ function Dashboard() {
                           <h4 className="font-semibold text-sm">{e.parsedJson?.title || 'Untitled Campaign'}</h4>
                           {isSelected && <span className="text-emerald-400 text-xs font-bold">✓ Selected</span>}
                         </div>
-                        <p className="text-xs text-gray-400 mb-2">Goal: {(e.parsedJson?.goal_amount / 1e9 || 0).toFixed(1)} OTC</p>
-                        <p className="text-xs text-gray-500 font-mono break-all">{e.parsedJson?.owner}</p>
+                        {(() => {
+                          const goal = (e.parsedJson?.goal_amount || 0) / 1e9;
+                          const raised = getRaised(e.parsedJson?.campaign_id);
+                          const pct = goal > 0 ? Math.min(100, Math.round((raised / goal) * 100)) : 0;
+                          return (
+                            <>
+                              <div className="flex justify-between text-xs mb-1">
+                                <span className="text-emerald-400">{raised.toFixed(2)} OTC raised</span>
+                                <span className="text-gray-400">Goal: {goal.toFixed(2)} OTC</span>
+                              </div>
+                              <div className="w-full bg-white/10 rounded-full h-1.5 mb-1">
+                                <div className="bg-gradient-to-r from-emerald-500 to-blue-500 h-1.5 rounded-full" style={{ width: `${pct}%` }} />
+                              </div>
+                              <p className="text-xs text-gray-500">{pct}% funded</p>
+                            </>
+                          );
+                        })()}
+                        <p className="text-xs text-gray-500 font-mono break-all mt-1">{e.parsedJson?.owner}</p>
                       </motion.div>
                     );
                   })}
